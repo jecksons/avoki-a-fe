@@ -1,0 +1,25 @@
+header.pos-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--primary-color-3);
+    padding: 0.5rem;
+}
+
+div#title{
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;    
+}
+
+div#pos-name{
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    min-width: 7rem;
+    display: flex;
+    justify-content: center;
+}

@@ -1,0 +1,91 @@
+:root{
+    --primary-color: #F48C06;        
+    --primary-color-2: #FFBC65;
+    --primary-color-3: #FEAA3C;
+    --primary-color-4: #BF6C00;
+    --primary-color-5: #965500;
+    --primary-color-6: #FFF2E0;
+    --primary-color-7: #FEF2E1;
+
+    --primary-color-text: #fff;
+
+    --secondary-color: #F44606;
+    --secondary-color-2:#FF8F65;
+    --secondary-color-3:#FE703C;
+    --secondary-color-4:#BF3400;
+    --secondary-color-5:#962900;
+
+    --background-color: #F1F1F1;
+    --surface-color: #FFF;    
+    --onsurface-detail: #F1F1F1;
+    --onsurface-item: #FAFAFA;
+    --onsurface-title: #707070;
+    --onsurface-text: #000;
+    --surface-hover-color: #FAFAFA;    
+    --onsurface-item-border: #B9B9B9;
+}
+
+
+@font-face {
+    font-family: 'nunitobold';
+    src: url('./fonts/nunito-bold-webfont.woff2') format('woff2'),
+         url('./fonts/nunito-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'nunitoregular';
+    src: url('./fonts/nunito-regular-webfont.woff2') format('woff2'),
+         url('./fonts/nunito-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+    font-family: 'nunitoregular', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+    background-color: var(--background-color);
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}

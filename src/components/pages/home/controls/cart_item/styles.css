@@ -1,0 +1,104 @@
+
+li.card-item{
+    padding: 0.5rem;
+    box-shadow:  0 0px 2px 0px rgba(0,0,0, 0.25);
+    margin: 0.5rem 0;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+}
+
+li.card-item:hover{
+    background-color: var(--surface-hover-color);
+    box-shadow:  0 2px 2px 0px rgba(0,0,0, 0.25);
+}
+
+strong{
+    font-weight: bold;
+    font-size: 1.2rem;    
+    color: var(--onsurface-title);    
+}
+
+div.product-title{
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;    
+    border-bottom: 1px solid var(--onsurface-detail);
+    margin: 0 0 0.5rem;
+}
+
+button#del-product{
+    display: none;
+    outline: none;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+li.card-item:hover  #del-product{
+    display: flex;
+}
+
+button#del-product svg{    
+    margin-left: 0.5rem;
+}
+
+button#del-product:hover {
+    color: var(--onsurface-title);
+}
+
+div.del-progress svg{
+    height: 60px;
+    width: 60px;
+    margin: 0;
+    margin-top: -25px;
+}
+
+div.cart-item-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--onsurface-title);
+}
+
+div.cart-item-details{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;    
+}
+
+div.cart-item-single{
+    min-width: 5rem;    
+    margin: 0 1rem;
+    text-align: right;
+}
+
+div#qty-item{
+    border-radius: 10px;
+    color: var(--primary-color);
+    background-color: var(--primary-color-6);
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid var(--primary-color);
+    cursor: pointer;
+}
+
+
+div#qty-item:hover{
+    background-color: var(--primary-color-2);
+}
+
+
+div#value-item{
+    font-size: 1.3rem;
+    color: var(--primary-color);    
+    font-weight: bold;
+}
