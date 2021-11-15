@@ -20,8 +20,8 @@ div.top-view{
 div.product-view{
     display: grid;
     height: 75vh;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 100%;
     gap: 1rem 1rem;
     margin: 0 1rem 1rem;
 }
@@ -30,8 +30,23 @@ div.section-card{
     background-color: var(--surface-color);
     padding: 1rem;
     border-radius: 6px;
-    box-shadow:  0 3px 3px 0px rgba(0,0,0, 0.25);
+    box-shadow:  0 3px 3px 0px rgba(0,0,0, 0.25);        
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+div.section-card-client,
+div.section-card-client-empty{
     overflow-y: auto;
+}
+
+div.section-card-client-empty{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
 }
 
 div.section-title{
@@ -88,51 +103,12 @@ div#curr-total-value{
     margin: 0.5rem;
 }
 
-input.search-input{
-    height: 1.5rem;
-    border-radius: 20px;
-    border: 0;
-    padding: 0.5rem 1.5rem;
-    outline: none;
-    width: 100%;
-}
 
-input.search-input:hover, input.search-input:focus{
-    box-shadow:  0 3px 3px 0px rgba(0,0,0, 0.25);
-}
-
-button.action-button{
-    background-color: var(--primary-color);
-    color: var(--primary-color-text);
-    border: 0;    
-    outline: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;   
-    cursor: pointer;
-}
-
-button.action-button:hover{
-    background-color: var(--primary-color-4);    
-}
-
-button.link-button{
-    margin-left: 0.5rem;
-    color: var(--primary-color);
-    border: 0;    
-    outline: none;
-    cursor: pointer;
-    padding: 0.5rem 1rem;   
-}
-
-button.link-button:hover{
-    color: var(--primary-color-4);
-}
 
 li.process-product-item{
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0.55rem;
     box-shadow:  0 0px 2px 0px rgba(0,0,0, 0.25);
-    margin: 0.5rem 0;
+    margin: 0.1rem 0.2rem 0.5rem;
     border-radius: 6px;
     cursor: default;
 }
@@ -144,4 +120,21 @@ li.process-product-item div.title{
     color: var(--onsurface-title);
     border-bottom: 1px solid var(--onsurface-detail);
     margin: 0 0 0.5rem;
+}
+
+
+div.no-items-selected{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem;
+}
+
+div.no-items-selected strong{
+    margin: 0 0 1rem;
+}
+
+div.no-items-selected div{
+    font-size: 0.9rem;
+    text-align: center;
 }

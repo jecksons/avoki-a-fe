@@ -1,0 +1,27 @@
+div.search-input-parent, div.search-input-parent-open{
+    width: 100%;
+}
+
+
+div.search-input-parent input, div.search-input-parent-open input{
+    height: 1.5rem;
+    border-radius: 20px;
+    border: 0;
+    padding: 0.5rem 1.5rem;
+    outline: none;    
+    width: 85%;
+}
+
+
+div.search-input-parent-open input{    
+    border-radius: 20px 20px 0 0;
+}
+
+
+div.search-input-parent input:hover, div.search-input-parent input:focus{
+    box-shadow:  0 3px 12px 0px rgba(0, 0, 0, 0.1);
+}
+
+input.search-input:hover, input.search-input:focus{
+    box-shadow:  0 3px 12px 0px rgba(0, 0, 0, 0.1);
+}

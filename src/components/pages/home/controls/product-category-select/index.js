@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {IoArrowBackCircleOutline} from 'react-icons/io5'
 import ProductSelect from '../product-select';
 import ContentLoader from 'react-content-loader';
+import {MdFastfood} from 'react-icons/md';
 
 export default function ProductCategorySelect(props) {
 
@@ -85,7 +86,7 @@ export default function ProductCategorySelect(props) {
                                     }}
                                     onClick={() => {onClickItem(itm)}}>
                                         <div className="img-content">
-                                            img
+                                            <MdFastfood size={16} />
                                         </div>
                                         <div className="category-text">
                                             {itm.description}

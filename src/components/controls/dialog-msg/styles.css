@@ -1,0 +1,37 @@
+div.overlay-dialog-content{
+    position: fixed;
+    inset: 0px;
+    background-color: rgb(56, 56, 56, 0.7);    
+}
+
+div.dialog-content{
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    width: fit-content;        
+    transform: translate(-50%, -50%);    
+    outline: 0;
+}
+
+div.dialog-content div#main-dialog{
+    padding: 1rem;
+    background: #fff;
+    border-radius: 4px ;
+    min-width: 16rem;
+}
+
+div.msg-client-dialog strong{
+    font-weight: bold;
+    cursor: default;
+}
+
+div.dialog-buttons{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+div.dialog-buttons button{
+    margin-left: 0.3rem;
+}

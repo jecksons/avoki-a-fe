@@ -7,17 +7,35 @@ import ProductCategorySelect  from './controls/product-category-select';
 import ContentLoader from 'react-content-loader';
 import utils from '../../../services/utils';
 import Toast from '../../controls/toast';
+import ProductAutoComplete from '../../controls/product-auto-complete';
+import DialogMsg from '../../controls/dialog-msg';
+import NumberFormat from 'react-number-format';
+
+const DLG_CANCEL_SALE = 'DLG_CANCEL_SALE';
 
 export default function Home (props) {
 
-    const [textSearch, setTextSearch] = useState('');
+
     const [posInfo, setPosInfo] = useState(null);
     const [cartItems, setCartItems] = useState([]);
     const [processItems, setProcessItems] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');    
+    const [dialogText, setDialogText] = useState('');
+    const [dialogEventCode, setDialogEventCode] = useState('');
+    const [dialogPosition, setDialogPosition] = useState(null);
+    
+
+        
+    const onYesDialogEvent = () => {
+        console.log(`code: ${dialogEventCode}`);
+        if (dialogEventCode === DLG_CANCEL_SALE) {
+            onConfirmCancelSales();
+        }
+    };    
+    
 
     useEffect(()=> {
-        api.get('/point_sale/id/1')
+        api.get('/point_sale/id/2')
         .then((ret) => {
             if (ret.status === 200) {
                 setPosInfo({
@@ -32,7 +50,6 @@ export default function Home (props) {
 
     const addItem = (item) => {
         setProcessItems([...processItems, item]);
-
         const prcRemItem = () => {
             let procItem = [];
             const oldProcItems = [...processItems];
@@ -40,10 +57,9 @@ export default function Home (props) {
                 if (prc !== item) {
                     procItem.push(prc);
                 }
-            })
+            });
             setProcessItems(procItem);
         }
-
         api.post('/point_sale/cart/item', {
             id_point_sale: posInfo.id,
             id_product: item.id,
@@ -67,35 +83,101 @@ export default function Home (props) {
             prcRemItem();
         });
     };
-        
+
+    const onItemDeleted = (newCartInfo) => {
+        let newPosInfo = {...posInfo};
+        newPosInfo.cart_value = newCartInfo.total_value;
+        setCartItems(newCartInfo.items.reverse());
+        setPosInfo(newPosInfo);
+    }
+
+    const onItemChanged = (newCartInfo) => {
+        let newPosInfo = {...posInfo};
+        newPosInfo.cart_value = newCartInfo.total_value;
+        let oldItems = [...cartItems];                
+        const idx = oldItems.findIndex((value) => value.id === newCartInfo.item.id);
+        if (idx >= 0) {
+            oldItems[idx] = newCartInfo.item;
+            setCartItems(oldItems);
+            setPosInfo(newPosInfo);
+        } else {
+            console.log('Item not found to update!');
+        }
+    }
+
+    const onConfirmCancelSales = () => {
+        setDialogText('');
+        api.post(`/point_sale/clear`,
+        {
+            id: posInfo.id
+        })
+        .then((ret) => {
+            if (ret.status === 200) {
+                setPosInfo({
+                    id: ret.data.id,
+                    description: ret.data.description,
+                    cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0
+                });
+                setCartItems(ret.data.currentCart ? ret.data.currentCart.items.reverse() : []);
+            } else {
+                setErrorMessage(utils.getHTTPError(ret));
+            }
+        })
+        .catch((err) => setErrorMessage(utils.getHTTPError(err)));        
+    }
+
+
+    const onNoDialog = () => {
+        setDialogText('');
+    }    
+            
 
     return (
         <div>
-            <HomeHeader  posInfo={{description: (posInfo ? posInfo.description : '')} }  />
+            <HomeHeader  posInfo={{description: (posInfo ? posInfo.description : '')} }  />            
             <div className="home-body">
                 <div className="top-view">
                     <div>
                         <button 
+                            id="cancel-sale-btn"
                             className="action-button"
-                            onClick={() => {setErrorMessage('mensagem de erro aqui') }}>Cancel sale</button>
+                            onClick={() => {
+                                if (cartItems.length > 0) {
+                                    const el = document.getElementById('cancel-sale-btn');
+                                    if (el) {
+                                        const rct = el.getBoundingClientRect();                                
+                                        const objSet = {
+                                            top: `${Math.trunc(rct.bottom + 2)}px`, 
+                                            left: `${Math.trunc(rct.left)}px`
+                                        };                     
+                                        console.log(objSet);
+                                        setDialogPosition(objSet);
+                                    }
+                                    setDialogEventCode(DLG_CANCEL_SALE);
+                                    setDialogText('Confirm the cancellation?');
+                                }                                
+                             }}>Cancel sale</button>
                         <button 
                             className="link-button"
                             onClick={() => {}}>Discount</button>
                     </div>
                     <div>
-                        <input type="text"
-                            className="search-input"
-                            autoFocus={true}
-                            value={textSearch}
-                            placeholder="Search the product or type his code"
-                            onChange={(e) => setTextSearch(e.target.value)}
-                        />
+                        <ProductAutoComplete onAddItem={addItem} />
                         <Toast message={errorMessage} onSetMsg={setErrorMessage} messageType="error"/>
                     </div>                    
                     <div className="section-total-value">
                         <div id="display-total-value">
                             <div id="caption-total-value">Total value</div>
-                            <div id="curr-total-value">{posInfo ? posInfo.cart_value : 0}</div>                    
+                            <div id="curr-total-value">
+                                <NumberFormat 
+                                    value={posInfo ? posInfo.cart_value : 0}
+                                    thousandSeparator={true}
+                                    decimalScale={2}
+                                    fixedDecimalScale={true}                                    
+                                    prefix={'$'}
+                                    displayType={'text'}
+                                />
+                                </div>                    
                         </div>
                         <button onClick={() => {}}>To Pay</button>
                     </div>            
@@ -103,42 +185,62 @@ export default function Home (props) {
                 <div className="product-view">
                     <div className="section-card">
                         <div className="section-title">Pick up the product</div>
-                        <ProductCategorySelect onAddItem={addItem} />
+                        <div className="section-card-client">
+                            <ProductCategorySelect onAddItem={addItem} onSetErrorMessage={setErrorMessage} />
+                        </div>                        
                     </div>
                     <div className="section-card">
                         <div className="section-title">Selected products</div>
-                        <div className="processing-products" >
-                            {processItems.length > 0 ? 
-                                (
-                                    <ul>
-                                        {processItems.map((itm) => {
-                                            return <li key={processItems.indexOf(itm)} className="process-product-item" >
-                                                <div className="title">{itm.description}</div>
-                                                <ContentLoader viewBox="0 0 200 8">
-                                                    <rect x={0} y="3" rx="3" ry="3" width="140" height="5" />
-                                                    <rect x={145} y="3" rx="3" ry="3" width="20" height="5" />
-                                                </ContentLoader>
-                                            </li>
-                                        })}
-                                    </ul>
-                                ) : null
-                            }
-                        </div>
-                        <div className="selected-products" >
-                            {cartItems.length > 0 ?  
-                                (
-                                    <ul>
-                                        {cartItems.map((itm) => <CartItem data={itm} key={itm.id}/>)}
-                                    </ul>
-                                ) : 
-                                (
-                                    <div>No items selected yet</div>
-                                )                            
-                            }
-                        </div>                
+                        <div className={`section-card-client${(processItems.length + cartItems.length) === 0 ? '-empty' : ''}`}>
+                            <div className="processing-products" >
+                                {processItems.length > 0 ? 
+                                    (
+                                        <ul>
+                                            {processItems.map((itm) => {
+                                                return <li key={processItems.indexOf(itm)} className="process-product-item" >
+                                                    <div className="title">{itm.description}</div>
+                                                    <ContentLoader viewBox="0 0 200 8">
+                                                        <rect x={0} y="3" rx="3" ry="3" width="140" height="5" />
+                                                        <rect x={145} y="3" rx="3" ry="3" width="20" height="5" />
+                                                    </ContentLoader>
+                                                </li>
+                                            })}
+                                        </ul>
+                                    ) : null
+                                }
+                            </div>
+                            <div className="selected-products" >
+                                {cartItems.length > 0 ?  
+                                    (
+                                        <ul>
+                                            {cartItems.map((itm) => 
+                                                <CartItem 
+                                                    data={itm} 
+                                                    key={itm.id} 
+                                                    onItemChanged={onItemChanged}
+                                                    onItemDeleted={onItemDeleted} 
+                                                    idPointSale={posInfo.id}
+                                                    onMsgError={setErrorMessage} />)}
+                                        </ul>
+                                    ) : 
+                                    (
+                                        <div className="no-items-selected">
+                                            <strong>No items selected yet</strong>
+                                            <div>You can pick up a product from the aside categories or finding it on the search input at the top of the screen</div>
+                                        </div>
+                                    )                            
+                                }
+                            </div>                
+                        </div>                                                
                     </div>
                 </div>
             </div>            
+            <DialogMsg
+                message={dialogText}
+                onYes={onYesDialogEvent}
+                onNo={onNoDialog}
+                position={dialogPosition}
+                />
         </div>
     );
 }
