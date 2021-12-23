@@ -6,6 +6,9 @@ import utils from '../../../services/utils';
 
 export default function ProductAutoComplete(props) {
 
+    if (!props.onSetErrorMessage) {
+        throw new Error('No onSetErrorMessage informed!');
+    }
 
     const [textSearch, setTextSearch] = useState('');
     const [foundItems, setFoundItems] = useState([]);    

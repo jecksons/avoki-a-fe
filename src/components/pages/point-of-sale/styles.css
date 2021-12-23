@@ -1,0 +1,140 @@
+
+div.home-body{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 8rem 1fr;
+    gap: 0px 0px;
+    margin: 0 5%;    
+}
+
+div.top-view{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    gap: 1rem 1rem; 
+    margin: 1rem;
+}
+
+
+div.product-view{
+    display: grid;
+    height: 75vh;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 100%;
+    gap: 1rem 1rem;
+    margin: 0 1rem 1rem;
+}
+
+div.section-card{
+    background-color: var(--surface-color);
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow:  0 3px 3px 0px rgba(0,0,0, 0.25);        
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+div.section-card-client,
+div.section-card-client-empty{
+    overflow-y: auto;
+}
+
+div.section-card-client-empty{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+div.section-title{
+    color: var(--primary-color);
+    font-weight: 300;
+    font-size: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: solid 1px var(--onsurface-detail);
+    margin-bottom: 1rem;
+}
+
+div.section-total-value{
+    min-width: 15rem;
+    display: flex;
+    flex-direction: row;
+    justify-self: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--secondary-color-2);
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+div#display-total-value{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+div.section-total-value button{
+    background-color: #fff;
+    color: var(--primary-color);
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 1.3rem;
+    border: 0;
+    outline: none;
+    margin-left: 1rem;
+}
+
+div.section-total-value button:hover{
+    background-color: #f1f1f1;    
+    cursor: pointer;
+}
+
+div#caption-total-value{
+    color: var(--secondary-color-5);        
+}
+
+div#curr-total-value{
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.5rem;
+}
+
+
+
+li.process-product-item{
+    padding: 0.5rem 0.5rem 0.55rem;
+    box-shadow:  0 0px 2px 0px rgba(0,0,0, 0.25);
+    margin: 0.1rem 0.2rem 0.5rem;
+    border-radius: 6px;
+    cursor: default;
+}
+
+li.process-product-item div.title{
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 0.5rem 0;
+    color: var(--onsurface-title);
+    border-bottom: 1px solid var(--onsurface-detail);
+    margin: 0 0 0.5rem;
+}
+
+
+div.no-items-selected{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem;
+}
+
+div.no-items-selected strong{
+    margin: 0 0 1rem;
+}
+
+div.no-items-selected div{
+    font-size: 0.9rem;
+    text-align: center;
+}

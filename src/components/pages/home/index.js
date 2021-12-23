@@ -1,246 +1,151 @@
 import './styles.css';
-import HomeHeader from './controls/header';
-import React, {useState, useEffect}  from 'react';
+import logo from '../../images/logo_white_512.png';
+import React, { useState, useRef, useEffect } from 'react';
+import ReactLoading from 'react-loading';
 import api from '../../../services/api';
-import CartItem from './controls/cart_item';
-import ProductCategorySelect  from './controls/product-category-select';
-import ContentLoader from 'react-content-loader';
 import utils from '../../../services/utils';
-import Toast from '../../controls/toast';
-import ProductAutoComplete from '../../controls/product-auto-complete';
-import DialogMsg from '../../controls/dialog-msg';
-import NumberFormat from 'react-number-format';
-
-const DLG_CANCEL_SALE = 'DLG_CANCEL_SALE';
-
-export default function Home (props) {
+import { useHistory } from 'react-router-dom';
+import {MdClear} from 'react-icons/md';
 
 
-    const [posInfo, setPosInfo] = useState(null);
-    const [cartItems, setCartItems] = useState([]);
-    const [processItems, setProcessItems] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');    
-    const [dialogText, setDialogText] = useState('');
-    const [dialogEventCode, setDialogEventCode] = useState('');
-    const [dialogPosition, setDialogPosition] = useState(null);
-    
+function BarLoadingButton(props) {
+    return <ReactLoading  height={15} width={30} color='#FFFFFF' type='bars' className='bar-load-progress'/>; 
+}
 
-        
-    const onYesDialogEvent = () => {
-        console.log(`code: ${dialogEventCode}`);
-        if (dialogEventCode === DLG_CANCEL_SALE) {
-            onConfirmCancelSales();
+
+export default function Home(props) {
+
+    const [demoCode, setDemoCode] = useState('');
+    const [demoCodeError, setDemoCodeError] = useState('');
+    const [runNewDemoError, setRunNewDemoError] = useState('');
+    const [loadingNewDemo, setLoadingNewDemo] = useState(false);
+    const [loadingDemo, setLoadingDemo] = useState(false);
+    const refDemoInput = useRef(null);
+    let history = useHistory();
+
+    const saveLastDemoCode = (code) => {
+        localStorage.setItem('lastDemoCode', code);
+    }
+
+    useEffect(() => {
+        const lastDemo = localStorage.getItem('lastDemoCode');
+        if (lastDemo && lastDemo !== '')  {
+            setDemoCode(lastDemo);
         }
-    };    
-    
-
-    useEffect(()=> {
-        api.get('/point_sale/id/2')
-        .then((ret) => {
-            if (ret.status === 200) {
-                setPosInfo({
-                    id: ret.data.id,
-                    description: ret.data.description,
-                    cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0
-                });
-                setCartItems(ret.data.currentCart ? ret.data.currentCart.items.reverse() : []);
-            }            
-        });
     }, []);
+    
 
-    const addItem = (item) => {
-        setProcessItems([...processItems, item]);
-        const prcRemItem = () => {
-            let procItem = [];
-            const oldProcItems = [...processItems];
-            oldProcItems.forEach((prc) => {
-                if (prc !== item) {
-                    procItem.push(prc);
+    const handleDemoCode = () => {
+        if (demoCode.length === 4) {
+            setLoadingDemo(true);
+            setDemoCodeError('');
+            api.get(`/point_sale/demo/${demoCode}`)
+            .then((ret) => {
+                if (ret.status === 200) {
+                    saveLastDemoCode(ret.data.demo_code);
+                    history.push(`/pointofsale/${ret.data.unique_code}`);                    
                 }
-            });
-            setProcessItems(procItem);
-        }
-        api.post('/point_sale/cart/item', {
-            id_point_sale: posInfo.id,
-            id_product: item.id,
-            quantity: item.quantity,
-            discount: 0
-        }).then((ret) => {
-            if (ret.status === 200) {
-                let newPosInfo = {...posInfo};
-                const cartData = ret.data.current_cart;
-                newPosInfo.cart_value = cartData.total_value;
-                let newItems = [cartData.item].concat(cartItems);
-                setCartItems(newItems);
-                setPosInfo(newPosInfo);
-                prcRemItem();
-            } else {
-                setErrorMessage(utils.getHTTPError(ret));
-                prcRemItem();
-            }
-        }).catch((err) => {
-            setErrorMessage(utils.getHTTPError(err));
-            prcRemItem();
-        });
-    };
-
-    const onItemDeleted = (newCartInfo) => {
-        let newPosInfo = {...posInfo};
-        newPosInfo.cart_value = newCartInfo.total_value;
-        setCartItems(newCartInfo.items.reverse());
-        setPosInfo(newPosInfo);
+            })
+            .catch((err) => {
+                if (err.response) {
+                    if (err.response.status === 404) {                        
+                        setLoadingDemo(false);
+                        setDemoCodeError('Demo code is invalid!');
+                        return;
+                    }
+                }
+                setLoadingDemo(false);
+                setDemoCodeError(utils.getHTTPError(err));
+            });            
+        }      
     }
 
-    const onItemChanged = (newCartInfo) => {
-        let newPosInfo = {...posInfo};
-        newPosInfo.cart_value = newCartInfo.total_value;
-        let oldItems = [...cartItems];                
-        const idx = oldItems.findIndex((value) => value.id === newCartInfo.item.id);
-        if (idx >= 0) {
-            oldItems[idx] = newCartInfo.item;
-            setCartItems(oldItems);
-            setPosInfo(newPosInfo);
-        } else {
-            console.log('Item not found to update!');
-        }
-    }
-
-    const onConfirmCancelSales = () => {
-        setDialogText('');
-        api.post(`/point_sale/clear`,
-        {
-            id: posInfo.id
-        })
+    const handleNewDemo = () => {
+        setLoadingNewDemo(true);        
+        setRunNewDemoError('');
+        api.get('/point_sale/newdemo/')
         .then((ret) => {
             if (ret.status === 200) {
-                setPosInfo({
-                    id: ret.data.id,
-                    description: ret.data.description,
-                    cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0
-                });
-                setCartItems(ret.data.currentCart ? ret.data.currentCart.items.reverse() : []);
-            } else {
-                setErrorMessage(utils.getHTTPError(ret));
+                saveLastDemoCode(ret.data.demo_code);
+                history.push(`/pointofsale/${ret.data.unique_code}`);                    
             }
         })
-        .catch((err) => setErrorMessage(utils.getHTTPError(err)));        
+        .catch((err) => {
+            setLoadingNewDemo(false);
+            setRunNewDemoError(utils.getHTTPError(err));
+
+        })
     }
 
-
-    const onNoDialog = () => {
-        setDialogText('');
-    }    
-            
+    const handleClearDemoCode = () => {
+        setDemoCode('');
+        setDemoCodeError('');
+        refDemoInput.current.focus();
+    }
 
     return (
-        <div>
-            <HomeHeader  posInfo={{description: (posInfo ? posInfo.description : '')} }  />            
-            <div className="home-body">
-                <div className="top-view">
-                    <div>
-                        <button 
-                            id="cancel-sale-btn"
-                            className="action-button"
-                            onClick={() => {
-                                if (cartItems.length > 0) {
-                                    const el = document.getElementById('cancel-sale-btn');
-                                    if (el) {
-                                        const rct = el.getBoundingClientRect();                                
-                                        const objSet = {
-                                            top: `${Math.trunc(rct.bottom + 2)}px`, 
-                                            left: `${Math.trunc(rct.left)}px`
-                                        };                     
-                                        console.log(objSet);
-                                        setDialogPosition(objSet);
+        <div className="main-body">
+            <section className="main-info">
+                <h1>Welcome to Avoki</h1>
+                <img className="logo" src={logo} alt="logo" />
+                <strong>A Point of Sale software designed to desktop devices with focus on agile sales.</strong>
+                <div className="access-pos">
+                    {runNewDemoError !== '' ? <div className='error-on-primary'>{runNewDemoError}</div>     : null} 
+                    <button 
+                        onClick={loadingNewDemo ? null : handleNewDemo}
+                        id="new-demo"
+                        className={`on-primary${loadingNewDemo ? '-disabled' : ''}`}>                            
+                            {loadingNewDemo ? <BarLoadingButton /> : 'Run a new demo'}                            
+                            </button>
+                    <h4>or</h4>
+                    <p>Continue with an existing demo code:</p>
+                    <div className="demodiv">
+                        {demoCodeError !== '' ? <div className='error-on-primary'>{demoCodeError}</div>     : null} 
+                        <div className="parent-democode">
+                            <div className='code-space'/>
+                            <input 
+                                id="democode"
+                                ref={refDemoInput}
+                                value={demoCode}                             
+                                onChange={(e) => {
+                                    setDemoCode(e.target.value.substring(0, 4));
+                                    if (demoCodeError !== '') {
+                                        setDemoCodeError('');
                                     }
-                                    setDialogEventCode(DLG_CANCEL_SALE);
-                                    setDialogText('Confirm the cancellation?');
-                                }                                
-                             }}>Cancel sale</button>
-                        <button 
-                            className="link-button"
-                            onClick={() => {}}>Discount</button>
-                    </div>
-                    <div>
-                        <ProductAutoComplete onAddItem={addItem} />
-                        <Toast message={errorMessage} onSetMsg={setErrorMessage} messageType="error"/>
-                    </div>                    
-                    <div className="section-total-value">
-                        <div id="display-total-value">
-                            <div id="caption-total-value">Total value</div>
-                            <div id="curr-total-value">
-                                <NumberFormat 
-                                    value={posInfo ? posInfo.cart_value : 0}
-                                    thousandSeparator={true}
-                                    decimalScale={2}
-                                    fixedDecimalScale={true}                                    
-                                    prefix={'$'}
-                                    displayType={'text'}
-                                />
-                                </div>                    
+                                }}                            
+                                />       
+                            {demoCode !== '' ? <button className='clear-demo' onClick={() => handleClearDemoCode()}>{<MdClear size={16} />}</button> : <div className='code-space'/> }                 
                         </div>
-                        <button onClick={() => {}}>To Pay</button>
-                    </div>            
-                </div>
-                <div className="product-view">
-                    <div className="section-card">
-                        <div className="section-title">Pick up the product</div>
-                        <div className="section-card-client">
-                            <ProductCategorySelect onAddItem={addItem} onSetErrorMessage={setErrorMessage} />
-                        </div>                        
-                    </div>
-                    <div className="section-card">
-                        <div className="section-title">Selected products</div>
-                        <div className={`section-card-client${(processItems.length + cartItems.length) === 0 ? '-empty' : ''}`}>
-                            <div className="processing-products" >
-                                {processItems.length > 0 ? 
-                                    (
-                                        <ul>
-                                            {processItems.map((itm) => {
-                                                return <li key={processItems.indexOf(itm)} className="process-product-item" >
-                                                    <div className="title">{itm.description}</div>
-                                                    <ContentLoader viewBox="0 0 200 8">
-                                                        <rect x={0} y="3" rx="3" ry="3" width="140" height="5" />
-                                                        <rect x={145} y="3" rx="3" ry="3" width="20" height="5" />
-                                                    </ContentLoader>
-                                                </li>
-                                            })}
-                                        </ul>
-                                    ) : null
-                                }
-                            </div>
-                            <div className="selected-products" >
-                                {cartItems.length > 0 ?  
-                                    (
-                                        <ul>
-                                            {cartItems.map((itm) => 
-                                                <CartItem 
-                                                    data={itm} 
-                                                    key={itm.id} 
-                                                    onItemChanged={onItemChanged}
-                                                    onItemDeleted={onItemDeleted} 
-                                                    idPointSale={posInfo.id}
-                                                    onMsgError={setErrorMessage} />)}
-                                        </ul>
-                                    ) : 
-                                    (
-                                        <div className="no-items-selected">
-                                            <strong>No items selected yet</strong>
-                                            <div>You can pick up a product from the aside categories or finding it on the search input at the top of the screen</div>
-                                        </div>
-                                    )                            
-                                }
-                            </div>                
-                        </div>                                                
+                        <button 
+                            onClick={((demoCode.length === 4) && !loadingDemo ? handleDemoCode : null)}
+                            id="btn-go"
+                            className={`on-primary${((demoCode.length !== 4) || loadingDemo  ? '-disabled'  : '')}`} 
+                         >
+                             {loadingDemo ?  <BarLoadingButton /> : 'Go' }
+                         </button>                         
                     </div>
                 </div>
-            </div>            
-            <DialogMsg
-                message={dialogText}
-                onYes={onYesDialogEvent}
-                onNo={onNoDialog}
-                position={dialogPosition}
-                />
+            </section>
+            <section className="features">
+                <h2>Features</h2>
+                <div className="parent-features">
+                    <div className="feature-item">
+                        <h3>Quick Product Picking</h3>
+                        <p>Product choose by barcode, category navigation or even by text.</p>
+                    </div>
+                    <div className="feature-item">
+                        <h3>Agility Is The Rule One</h3>
+                        <p>Shortcuts to sales options.<br/>System designed for the real world of Point of Sale needs.</p>
+                    </div>
+                    <div className="feature-item">
+                        <h3>All In One Place</h3>
+                        <p>All the features in the same place, improving the sales speed.</p>
+                    </div>
+                </div>
+            </section>            
+            <section className="bottom-info">
+                <h4>Design and development by Jéckson Schwengber</h4>
+            </section>
         </div>
     );
 }

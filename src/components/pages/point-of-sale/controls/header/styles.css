@@ -4,13 +4,16 @@ header.pos-header{
     justify-content: space-between;
     background-color: var(--primary-color-3);
     padding: 0.5rem;
+    align-items: center;
 }
 
-div#title{
+header.pos-header a{
     font-weight: bold;
     font-size: 1.5rem;
     display: flex;
     align-items: center;    
+    text-decoration: none;
+    color: var(--onsurface-text);
 }
 
 div#pos-name{

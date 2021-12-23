@@ -1,0 +1,311 @@
+div#parent-dialog-payment,
+div#parent-dialog-process-payment{
+    background-color: var(--background-color);
+    padding: 1.5rem;
+    border-radius: 15px;       
+    min-height: 34.4rem;
+    min-width: 37rem;
+}
+
+div#parent-dialog-payment{
+    display: grid;
+    grid-template-rows: repeat(4, 7rem) max-content;
+    grid-template-columns: 20rem 16rem;
+    column-gap: 1rem;
+    row-gap: 1rem;
+}
+
+div#parent-dialog-process-payment{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+section.card-pay{
+    box-shadow: 0px 0px 6px 6px rgba(224, 222, 222, 0.25);
+    border-radius: 10px;
+    background-color: var(--surface-color);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+button#reset-payments{
+    padding: 0;
+}
+
+div.header-payments{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+h2.card-title{
+    font-weight: bold;    
+    margin-bottom: 1rem;
+}
+
+section.card-pay h3{
+    font-weight: bold;
+    color: var(--onsurface-title);
+}
+
+section#payment{
+    grid-column: 1 / 1 ;
+    grid-row: 1 / span 4;
+    
+}
+
+section#order-summary{
+    grid-column: 2 / 2;
+    grid-row: 1 / span 2;
+
+}
+
+section#payment-summary{
+    grid-column: 2 / 2;
+    grid-row: 3 / span 2;
+    
+}
+
+div.bottom-options{
+    grid-column: 1 / span 2;
+    grid-row: 5 / span 1;
+}
+
+div.parent-summary-item{
+    flex: 1;
+}
+
+div.summary-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+div.summary-total{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;    
+    border-top: 1px solid var(--onsurface-detail);
+    margin: 1rem 0 0 0;
+    padding: 1rem 0 0 0;    
+}
+
+h2.total-value{
+    font-weight: bold;    
+}
+
+div.bottom-options{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul.payment-items{
+    flex: 1;
+    overflow-y: auto;    
+}
+
+li.payment-item{
+    display: flex;
+    flex-direction: column;    
+}
+
+div.parent-payment-option{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 2.25rem;        
+}
+
+li.payment-item:not(:last-child){
+    margin-bottom: 0.5rem;
+}
+
+div.payment-option-parcel,
+div.payment-option-parcel-show{    
+    flex-direction: row;
+    justify-content: end;    
+    display: flex;    
+}
+
+div.payment-option-parcel{    
+    opacity: 0;
+    height: 0;
+    -ms-transform: translate(0, -100%);
+    transform: translate(0, -100%);
+    transition: 10ms ease-out;     
+}
+
+div.payment-option-parcel-show{    
+    opacity: 1;
+    height: auto;
+    padding-top: 2px;
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    transition: 0.3s ease-in;        
+}
+
+div.payment-option-parcel div.select-parcel{
+    display: none;
+    height: 0;
+}
+
+div.payment-option-parcel-show div.select-parcel{
+    display: flex;
+    height: auto;
+}
+
+div.select-parcel__control{
+    width: 5.25rem;
+    font-size: 0.9rem;    
+    border: 0;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 0;    
+}
+
+div.select-parcel__control:hover,
+div.select-parcel__control--is-focused:hover{
+    box-shadow: 0 0 2px 2px #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+}
+
+div.select-parcel__control--is-focused{    
+    outline: 0;
+    box-shadow: 0 0 2px 2px #ebebeb;
+}
+
+div.select-parcel__option--is-focused{
+    background-color: var(--primary-color-7);
+}
+
+div.select-parcel__option--is-selected{
+    background-color: var(--primary-color);
+}
+
+input.value-edit,
+input.value-edit-selected{
+    width: 5rem;
+    font-size: 1rem;
+    text-align: right;
+    border-radius: 0 10px 10px 0;
+    outline: none;
+    border: 1px solid var(--onsurface-detail);
+}
+
+input.value-edit-selected{
+    border: 1px solid var(--primary-color);    
+    background-color: var(--primary-color-7);
+}
+
+button.payment-option,
+button.payment-option-selected{
+    flex: 1;
+    outline: none;
+    border-radius: 10px 0 0 10px;
+    background-color: var(--background-color);
+    border: 1px solid var(--onsurface-detail);
+    transition: 0.5s ease-out;
+    cursor: pointer;
+}
+
+button.payment-option:hover{
+    background-color: var(--background-color-hover);
+}
+
+button.payment-option-selected{
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);    
+    border: 1px solid var(--primary-color);    
+}
+
+button.payment-option-selected:hover{
+    background-color: var(--primary-color-4);
+}
+
+button#cancel-sale{
+    padding: 0;
+}
+
+button#finish{
+    margin-left: 1rem;
+    min-width: 10rem;
+}
+
+h4.green-highlight{
+    color: #09B930;
+    font-weight: bold;
+}
+
+section#process-payment-parent{
+    min-width: 18rem;
+    max-width: 25rem;
+    min-height: 12rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    row-gap: 1.5rem;
+}
+
+div.loading-payment{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+div.button-options-error{
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+
+div.button-options-error button{
+    min-width: 12rem;
+}
+
+div.confirm-cancel,
+div.confirm-cancel-show{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 0.25rem;
+}
+
+div.confirm-cancel{
+    opacity: 0;        
+    -ms-transform: translate(-100%, 0);
+    transform: translate(-100%, 0);        
+    transition: 0.1s ease-in;
+}
+
+div.confirm-cancel-show{
+    opacity: 1;    
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);        
+    transition: 0.5s ease-out;
+}
+
+div.confirm-cancel button{
+    display: none;
+}
+
+div.confirm-cancel-show button{
+    display: inherit;
+}
+
+div.cancel-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 1rem;
+}

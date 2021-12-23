@@ -8,6 +8,7 @@
     --primary-color-7: #FEF2E1;
 
     --primary-color-text: #fff;
+    --primary-color-text-hover: #f4f4f4;
 
     --secondary-color: #F44606;
     --secondary-color-2:#FF8F65;
@@ -15,7 +16,8 @@
     --secondary-color-4:#BF3400;
     --secondary-color-5:#962900;
 
-    --background-color: #F1F1F1;
+    --background-color: #F6F6F6;
+    --background-color-hover: #d0d0d0;
     --surface-color: #FFF;    
     --onsurface-detail: #F1F1F1;
     --onsurface-item: #FAFAFA;
@@ -23,6 +25,9 @@
     --onsurface-text: #000;
     --surface-hover-color: #FAFAFA;    
     --onsurface-item-border: #B9B9B9;
+    --onprimary-error: #FF0000;   
+    --success-feedback: #00FD38;
+    --onsuccess-feedback: #000;
 }
 
 
@@ -40,9 +45,27 @@
     src: url('./fonts/nunito-regular-webfont.woff2') format('woff2'),
          url('./fonts/nunito-regular-webfont.woff') format('woff');
     font-weight: normal;
-    font-style: normal;
-
+    font-style: normal;    
 }
+
+
+
+@font-face {
+    font-family: 'nunitoregular';
+    src: url('./fonts/nunito-light-webfont.woff2') format('woff2'),
+         url('./fonts/nunito-light-webfont.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'nunitoregular';
+    src: url('./fonts/nunito-extralight-webfont.woff2') format('woff2'),
+         url('./fonts/nunito-extralight-webfont.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+}
+
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -88,4 +111,25 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+
+::-webkit-scrollbar {
+    width: 8px;
+    
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #b4b4b4; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
 }

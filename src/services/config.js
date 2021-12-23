@@ -1,10 +1,11 @@
 export default function Config(){
     let env = process.env.NODE_ENV || 'development';
    
-    const dev_prod = process.env.REACT_APP_DEV_PROD || 'N';
+    const dev_prod = process.env.REACT_APP_DEV_PROD || 'N';    
 
-    if (dev_prod === 'Y') {
+    if (dev_prod === 'Y') {        
         env = 'production';
+        console.log('Dev environment manually changed to production.');
     };
 
 

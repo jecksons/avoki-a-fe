@@ -1,17 +1,23 @@
 
-button.action-button{
+button.action-button,
+button.action-button-disabled{
     background-color: var(--primary-color);
     color: var(--primary-color-text);
     border: 0;    
     outline: none;
     border-radius: 6px;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;   
+    padding: 0.75rem 1rem;   
     cursor: pointer;
 }
 
 button.action-button:hover{
     background-color: var(--primary-color-4);    
+}
+
+button.action-button-disabled{
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: default;
 }
 
 button.link-button{
@@ -27,3 +33,61 @@ button.link-button{
 button.link-button:hover{
     color: var(--primary-color-4);
 }
+
+button.secondary-action{
+    background-color: #F6F6F6;
+    color: #808080;
+    border: 0;
+    border: 1px solid #E4E4E4;
+    border-radius: 6px;
+    padding: calc(0.75rem - 1px) 1rem;   
+    outline: none;
+    cursor: pointer;
+}
+
+button.secondary-action:hover{
+    background-color: #e4e4e4;    
+}
+
+button.on-primary,
+button.on-primary-disabled{
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color-text);
+    color: var(--primary-color);
+    border-radius: 2px;
+    outline: none;
+    border: 0;
+    box-shadow: 3px 3px 3px 0 rgb(0,0,0, 0.2);
+    cursor: pointer;
+}
+
+button.on-primary:hover{
+    position: relative;
+    top: 2px;
+    left: 2px;
+    background-color: var(--primary-color-text-hover);
+}
+
+button.on-primary-disabled{
+    background-color: var(--primary-color-2);
+    color: var(--primary-color-text);
+    cursor: default;
+    box-shadow: none;
+}
+
+div.error-on-primary{
+    background-color: var(--onprimary-error);
+    color: var(--primary-color-text);
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+div.error-on-surface,
+p.error-on-surface{
+    color: var(--onprimary-error);
+}
+
+p.error-on-surface{
+    text-align: center;
+}
+
