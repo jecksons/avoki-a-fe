@@ -135,7 +135,7 @@ function POSLastSales(props) {
 
    const getTimeAgoStr = (dt) => {            
       let dtComp = dt;
-      if (typeof dtComp !== 'date')  {
+      if (typeof dtComp === 'string')  {
          dtComp = new Date(dtComp);
       }
       return timeAgo.format(dtComp, 'round-minute');
