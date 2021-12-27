@@ -4,6 +4,9 @@ div.parent-management{
    flex-direction: row;
 }
 
+div.left-side-hide-menu{
+   display: none;
+}
 
 a.app-title,
 a.app-title-small{
@@ -92,9 +95,45 @@ section.client-items{
    flex: 1;
 }
 
+button.hambg-menu{
+   background: transparent;
+   outline: none;
+   border: 0;   
+}
+
+button.hambg-menu:focus{
+   background-color: var(--background-color-hover);
+   border-radius: 20px;
+}
+
+button.hambg-menu:hover{
+   background-color: var(--onsurface-item-border);   
+   border-radius: 20px;
+}
+
 @media only screen and (max-width: 1150px) {
-   section.side-menu{   
+   div.side-menu-normal{   
       display: none;   
+   }
+
+   div.left-side-hide-menu,
+   div.left-side-hide-menu-show{
+      display: block;
+      position: fixed;
+      top: 3rem;
+      left: 0;
+      -ms-transform: translate(-100%, 0);
+      transform: translate(-100%, 0);
+      z-index: 999999;
+      transition: 0.5s ease-in-out;
+      width: 80vw;      
+      
+   }
+
+   div.left-side-hide-menu-show{
+      -ms-transform: translate(0, 0);
+      transform: translate(0, 0);      
+      box-shadow: 2px 2px 1px 1px #fafafa;
    }
 
    div.parent-management{      
@@ -111,5 +150,12 @@ section.client-items{
       right: 0;
       background-color: #ffffff70;
       box-shadow: 0 0 2px 2px #ebebeb;      
+      justify-content: space-between;
+      align-content: center;
    }
+
+   header.top-mgment::after {
+      content: "";
+      width: 2rem;
+   }   
 }

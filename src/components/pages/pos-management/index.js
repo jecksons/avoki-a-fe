@@ -6,6 +6,7 @@ import utils from '../../../services/utils';
 import qs from 'qs';
 import {MdSpaceDashboard, MdOutlineFeaturedPlayList} from 'react-icons/md';
 import POSDashboard from './controls/pos-dashboard';
+import {RiMenu5Fill} from 'react-icons/ri';
 
 
 const ManMenuOptions =  {
@@ -28,7 +29,7 @@ function LeftSideMenu(props) {
 
    return (
       <section className='side-menu'>
-         <Link to="/" className='app-title' >AVOKI</Link>
+         {props.hideAppTitle ? null :  <Link to="/" className='app-title' >AVOKI</Link>}         
          <button className='dash-pos-info' onClick={() => {
             history.push(`/pointofsale/${posInfo.unique_code}`);
          }}>
@@ -51,12 +52,46 @@ function LeftSideMenu(props) {
 }
 
 
+
+function POSManagementTopMenu(props) {
+
+   if (!props.onChangeShow) {
+      throw new Error('No onChangeShow is informed!');
+   }
+
+   return (
+      <header className='top-mgment'>
+         <button onClick={() => {
+            props.onChangeShow();
+         } } className='hambg-menu'><RiMenu5Fill size={20}/></button>
+         <Link to="/" className='app-title-small' >AVOKI</Link>                     
+      </header>
+   );
+
+}
+
+
+function LeftSideMenuHidden(props) {
+   return (
+      <div className={`left-side-hide-menu${props.show ? '-show' : ''}`}>
+         <LeftSideMenu 
+            posInfo={props.posInfo} 
+            location={props.location}
+            hideAppTitle={true}
+            selMenuOption={props.selMenuOption}         
+         />
+         
+      </div>
+   ) 
+}
+
 export default function POSManagement(props) {
 
    const [posInfo, setPosInfo] = useState(null);
    const [loadingPosInfo, setLoadingPosInfo] = useState(true);
    const history = useHistory();
    const [selMenuOption, setSelMenuOption] = useState(ManMenuOptions.dashboard);
+   const [showMenu, setShowMenu] = useState(false) ;
 
    useEffect(() => {
       console.log('loading');
@@ -96,6 +131,11 @@ export default function POSManagement(props) {
       }
    }, [props.location.search]);
 
+   const onChangeShowMenu = () => {
+      console.log(`set show ${showMenu}`);
+      setShowMenu(!showMenu);
+   }
+
 
    return (
       <div>
@@ -103,13 +143,18 @@ export default function POSManagement(props) {
             loadingPosInfo ? <div>Loading...</div> :
             (               
                <div className='parent-management'>
-                  <header className='top-mgment'>
-                     <button onClick={() => {}}>H</button>
-                     <Link to="/" className='app-title-small' >AVOKI</Link>
-                  </header>
-                  <LeftSideMenu   
+                  <POSManagementTopMenu  onChangeShow={onChangeShowMenu} />              
+                  <div className='side-menu-normal'>
+                     <LeftSideMenu   
+                        posInfo={posInfo} 
+                        location={props.location}
+                        selMenuOption={selMenuOption} />
+                  </div>                                        
+                  <LeftSideMenuHidden 
                      posInfo={posInfo} 
+                     onChangeShow={onChangeShowMenu}
                      location={props.location}
+                     show={showMenu}
                      selMenuOption={selMenuOption} />
                   <section className='client-items'>
                      {selMenuOption === ManMenuOptions.dashboard ? <POSDashboard posInfo={posInfo}/> : 'statements'}
