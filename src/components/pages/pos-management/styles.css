@@ -1,0 +1,115 @@
+div.parent-management{
+   background-color: var(--background-color);
+   display: flex;
+   flex-direction: row;
+}
+
+
+a.app-title,
+a.app-title-small{
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   color: var(--primary-color);
+   font-size: 1rem;
+   font-weight: bold;
+   padding: 1.5rem;
+   text-decoration: none;
+}
+
+a.app-title-small{
+   padding: 0.5rem;
+}
+
+header.top-mgment{
+   display: none;
+}
+
+section.side-menu{
+   background-color: var(--surface-color);
+   display: flex;
+   flex-direction: column;
+   height: 100vh;
+}
+
+div.dash-mo{
+   display: flex;
+   flex-direction: column;
+   margin: 5rem 1.5rem 0;
+   row-gap: 1rem;
+}
+
+button.dash-pos-info{
+   padding: 1rem;
+   padding-left: 1.5rem;
+   background-color: var(--background-color);
+   color: var(--onbackground);
+   border-radius: 0 0 20px 0;
+   border: 0;   
+   cursor: pointer;
+   text-decoration-line: underline;
+   display: flex;
+   flex-direction: row;
+   transition: 0.2s ease-in;
+   box-shadow: 2px 2px 2px 0 #ebebeb;
+}
+
+button.dash-pos-info:hover{
+   background-color: var(--background-color-hover);   
+}
+
+button.dash-mi, button.dash-mi-selected{
+   border: 0;
+   outline: none;
+   background-color: var(--surface-color);
+   color: var(--onsurface-title);
+   display: flex;
+   font-size: 0.75rem;
+   flex-direction: row;
+   padding: 0.5rem 1rem;
+   align-items: center;
+   column-gap: 0.5rem;
+   border-radius: 8px;
+   cursor: pointer;
+}
+
+button.dash-mi-selected{
+   background-color: var(--primary-color-6);
+   color: var(--primary-color);   
+}
+
+button.dash-mi:hover{
+   background-color: var(--onsurface-detail);
+}
+
+button.dash-mi-selected:hover{
+   background-color: var(--primary-color-8);
+   
+}
+
+section.client-items{
+   flex: 1;
+}
+
+@media only screen and (max-width: 1150px) {
+   section.side-menu{   
+      display: none;   
+   }
+
+   div.parent-management{      
+      flex-direction: column;      
+   }
+
+   header.top-mgment{
+      display: flex;
+      flex-direction: row;
+      padding: 0.5rem;      
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff70;
+      box-shadow: 0 0 2px 2px #ebebeb;      
+   }
+}

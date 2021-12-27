@@ -6,6 +6,7 @@
     --primary-color-5: #965500;
     --primary-color-6: #FFF2E0;
     --primary-color-7: #FEF2E1;
+    --primary-color-8: #FFDEB4;
 
     --primary-color-text: #fff;
     --primary-color-text-hover: #f4f4f4;
@@ -18,8 +19,10 @@
 
     --background-color: #F6F6F6;
     --background-color-hover: #d0d0d0;
+    --onbackground: #707070;
     --surface-color: #FFF;    
-    --onsurface-detail: #F1F1F1;
+    --surface-hover: #FAFAFA;
+    --onsurface-detail: #F1F1F1;    
     --onsurface-item: #FAFAFA;
     --onsurface-title: #707070;
     --onsurface-text: #000;
@@ -132,4 +135,9 @@ table {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555; 
+}
+
+
+button{
+    font-family: 'nunitoregular';
 }

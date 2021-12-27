@@ -91,3 +91,25 @@ p.error-on-surface{
     text-align: center;
 }
 
+li.react-tabs__tab,
+li.react-tabs__tab--selected{
+    background-color: var(--surface-color);    
+    color: var(--onsurface-title);
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    box-shadow: 0 0 4px 0 #70707064;
+    cursor: pointer;
+}
+
+li.react-tabs__tab--selected{
+    color: var(--primary-color);   
+    border-top: 2px solid var(--primary-color);
+    box-shadow: none;
+    border-left: 1px solid #ebebeb;
+    border-right: 1px solid #ebebeb;
+}
+
+ul.react-tabs__tab-list{
+    display: flex;
+    flex-direction: row;
+}

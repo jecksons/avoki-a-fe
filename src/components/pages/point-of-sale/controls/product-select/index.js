@@ -74,8 +74,12 @@ export default function ProductSelect(props) {
                             <div>
                                 <div className="header-products">
                                     <label>Click on the item to add it to cart with quantity:</label>
-                                    <input type="number" value={qtyAdd} onChange={(e) =>  handleQty(e.target.value)
-                                    } />
+                                    <input 
+                                        type="number" 
+                                        value={qtyAdd} 
+                                        onChange={(e) =>  handleQty(e.target.value)} 
+                                        onFocus={(e) => e.target.select()}
+                                    />
                                 </div>
                                 <ul className="product-list">
                                     {products.map((itm) => {

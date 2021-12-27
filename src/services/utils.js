@@ -14,6 +14,21 @@ class Utils {
           }
         return error.message;
     }
+
+    getDateToURLParam(dt) {        
+        return `${dt.getFullYear()}-${(dt.getMonth()+1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}`;
+    }
+
+    getDateToStrShow(dt) {
+        let dtDate = dt;
+        if (typeof dtDate === 'string') {
+            dtDate = new Date(dtDate);
+        }
+        return `${dtDate.getDate().toString().padStart(2, '0')}/${(dtDate.getMonth()+1).toString().padStart(2, '0')}/` + 
+            `${dtDate.getFullYear().toString()}, ${dtDate.getHours().toString().padStart(2, '0')}:${dtDate.getMinutes().toString().padStart(2, '0')}`;
+
+    }
+
 }
 
 export default new Utils();

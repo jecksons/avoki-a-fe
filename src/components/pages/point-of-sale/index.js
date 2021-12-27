@@ -1,5 +1,5 @@
 import './styles.css';
-import HomeHeader from './controls/header';
+import HomeHeader from './controls/home-header';
 import React, {useState, useEffect}  from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../../../services/api';
@@ -13,6 +13,8 @@ import DialogMsg from '../../controls/dialog-msg';
 import NumberFormat from 'react-number-format';
 import PaymentDialog from './controls/payment-dialog';
 import SaleFeedback from './controls/sale-feedback';
+import { ProcessStatus, StatusShow } from '../../controls/process-status';
+import {MdOutlinePayments} from 'react-icons/md';
 
 
 const DLG_CANCEL_SALE = 'DLG_CANCEL_SALE';
@@ -30,6 +32,9 @@ export default function PointOfSale (props) {
     const [showingPayment, setShowingPayment] = useState(false);
     const [showingSaleFeedback, setShowingSaleFeedback] = useState(false);
     const [lastSaleNumber, setLastSaleNumber] = useState(null);
+    const [cancellmentProps, setCancellmentProps] = useState(null);
+    const [keyCart, setKeyCart] = useState(0);
+    
     const history = useHistory();
     
 
@@ -61,7 +66,6 @@ export default function PointOfSale (props) {
             }            
         })
         .catch((err) => {
-            console.log(err);
             if (err.response) {
                 if (err.response.status === 404) {                    
                     history.push(`/notfound/?requestedURL=${props.location.pathname}`);
@@ -127,28 +131,51 @@ export default function PointOfSale (props) {
         }
     }
 
+        
+    const onCloseCancelCancellment = () => {
+        let newCancelProps = cancellmentProps ? {...cancellmentProps} : {showing: false};
+        newCancelProps.showing = false;
+        setCancellmentProps(newCancelProps);
+    }
+
     const onConfirmCancelSales = () => {
         setDialogText('');
+        const newCancelProps = {
+            showing: true,
+            status: {
+                code: StatusShow.processing,
+                message: null,
+                title: 'Cancelling this sale'
+            }
+        };
+        setCancellmentProps(newCancelProps);        
         api.post(`/point_sale/clear`,
         {
             id: posInfo.id
         })
         .then((ret) => {
-            if (ret.status === 200) {
-                setPosInfo({
-                    id: ret.data.id,
-                    description: ret.data.description,
-                    id_business: ret.data.id_business,
-                    cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0
-                });
-                setCartItems(ret.data.currentCart ? ret.data.currentCart.items.reverse() : []);
-            } else {
-                setErrorMessage(utils.getHTTPError(ret));
-            }
+            setPosInfo({
+                id: ret.data.id,
+                description: ret.data.description,
+                id_business: ret.data.id_business,
+                cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0
+            });
+            setCartItems(ret.data.currentCart ? ret.data.currentCart.items.reverse() : []);
+            setKeyCart(keyCart + 1);
+            onCloseCancelCancellment();
         })
-        .catch((err) => setErrorMessage(utils.getHTTPError(err)));        
+        .catch((err) => {
+            const newCancelPropsError = {
+                showing: true,
+                status: {
+                    code: StatusShow.error,
+                    message: utils.getHTTPError(err),
+                    title: 'Error on try to cancel'
+                }
+            };
+            setCancellmentProps(newCancelPropsError);            
+        });        
     }
-
 
     const onNoDialog = () => {
         setDialogText('');
@@ -164,13 +191,13 @@ export default function PointOfSale (props) {
         setShowingSaleFeedback(true);
         setPosInfo({...posInfo, cart_value: saleReturn.pos_info.currentCart ? saleReturn.pos_info.currentCart.total_value : 0});
         setCartItems(saleReturn.pos_info.currentCart ? saleReturn.pos_info.currentCart.items.reverse() : []);        
+        setKeyCart(keyCart + 1);
     }
-
     
     const onCancelSaleFromPayment = () => {
         setShowingPayment(false);
         onConfirmCancelSales();        
-    }            
+    }           
 
     return (
         <div>
@@ -180,7 +207,7 @@ export default function PointOfSale (props) {
                     <div>
                         <button 
                             id="cancel-sale-btn"
-                            className="action-button"
+                            className={`action-button${cartItems.length > 0 ? '' : '-disabled'}`}
                             onClick={() => {
                                 if (cartItems.length > 0) {
                                     const el = document.getElementById('cancel-sale-btn');
@@ -224,14 +251,19 @@ export default function PointOfSale (props) {
                             if (posInfo && posInfo.cart_value > 0)  {
                                 setShowingPayment(true);
                             }                            
-                        }}>To Pay</button>
+                            }}
+                            className={`pay-sale${posInfo && posInfo.cart_value > 0 ? '' : '-disabled'}`}
+                        >Pay <MdOutlinePayments size={20}/></button>
                     </div>            
                 </div>
                 <div className="product-view">
                     <div className="section-card">
                         <div className="section-title">Pick up the product</div>
                         <div className="section-card-client">
-                            <ProductCategorySelect onAddItem={addItem} onSetErrorMessage={setErrorMessage} />
+                            <ProductCategorySelect 
+                                onAddItem={addItem} 
+                                key={keyCart}
+                                onSetErrorMessage={setErrorMessage} />
                         </div>                        
                     </div>
                     <div className="section-card">
@@ -298,6 +330,13 @@ export default function PointOfSale (props) {
                 saleNumber={lastSaleNumber}
                 onAutoHide={onHideSaleFeedback}
             />
+            <ProcessStatus
+                show={cancellmentProps ? cancellmentProps.showing : false}
+                onCloseCancel={onCloseCancelCancellment}
+                onRetry={onConfirmCancelSales}
+                status={cancellmentProps ? cancellmentProps.status : null}                
+            />
+
         </div>
     );
 }

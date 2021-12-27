@@ -1,0 +1,50 @@
+
+div.p-std-select__control{
+   width: 7.5rem;
+   font-size: 0.7rem;       
+   border-radius: 15px;    
+   min-height: 1.5rem;
+}
+
+div.p-std-select__control:hover{
+   box-shadow: 0 0 2px 2px #ebebeb;   
+   border-color: var(--primary-color-8);
+}
+
+div.p-std-select__control--is-focused:hover{
+   box-shadow: 0 0 2px 2px #ebebeb;
+   border-color: var(--primary-color-2); 
+}
+
+div.p-std-select__control--is-focused{    
+   outline: 0;
+   border-color: var(--primary-color-2);
+   box-shadow: 0 0 2px 2px #ebebeb;
+}
+
+div.p-std-select__option{
+   font-size: 0.7rem;
+}
+
+
+div.p-std-select__option--is-focused{
+   background-color: var(--primary-color-7);   
+}
+
+div.p-std-select__option--is-selected{
+   background-color: var(--primary-color);
+}
+
+
+span.p-std-select__indicator-separator{    
+   display: none;
+}
+
+div.p-std-select__value-container{
+   padding: 0 0.5rem;
+
+}
+
+div.p-std-select__indicator{    
+   padding: 0 0.5rem;
+}
