@@ -1,11 +1,12 @@
 import './styles.css';
 import logo from '../../images/logo_white_512.png';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import ReactLoading from 'react-loading';
 import api from '../../../services/api';
 import utils from '../../../services/utils';
 import { useHistory } from 'react-router-dom';
 import {MdClear} from 'react-icons/md';
+import SessionContext from '../../../store/session-context';
 
 
 function BarLoadingButton(props) {
@@ -20,6 +21,7 @@ export default function Home(props) {
     const [runNewDemoError, setRunNewDemoError] = useState('');
     const [loadingNewDemo, setLoadingNewDemo] = useState(false);
     const [loadingDemo, setLoadingDemo] = useState(false);
+    const {setSessionValue} = useContext(SessionContext);
     const refDemoInput = useRef(null);
     let history = useHistory();
 
@@ -41,10 +43,16 @@ export default function Home(props) {
             setDemoCodeError('');
             api.get(`/point_sale/demo/${demoCode}`)
             .then((ret) => {
-                if (ret.status === 200) {
-                    saveLastDemoCode(ret.data.demo_code);
-                    history.push(`/pointofsale/${ret.data.unique_code}`);                    
-                }
+                
+                setSessionValue({
+                    id_business: ret.data.id_business,
+                    point_of_sale: {
+                        id: ret.data.id,
+                        unique_code: ret.data.unique_code
+                    }
+                });
+                saveLastDemoCode(ret.data.demo_code);
+                history.push(`/pointofsale/${ret.data.unique_code}`);                    
             })
             .catch((err) => {
                 if (err.response) {

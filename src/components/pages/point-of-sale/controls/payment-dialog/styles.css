@@ -133,7 +133,7 @@ li.payment-item:not(:last-child){
 div.payment-option-parcel,
 div.payment-option-parcel-show{    
     flex-direction: row;
-    justify-content: end;    
+    justify-content: flex-end;    
     display: flex;    
 }
 

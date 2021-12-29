@@ -29,6 +29,16 @@ class Utils {
 
     }
 
+    redirectToErrorPage(history, err, location) {
+        if (err.response) {
+            if (err.response.status === 404)  {
+               history.push(`/notfound/?requestedURL=${location.pathname}`);
+               return;
+            }
+         }
+         history.push(`/unknown-error/?requestedURL=${location.pathname}&message=${this.getHTTPError(err)}`);
+    }
+
 }
 
 export default new Utils();

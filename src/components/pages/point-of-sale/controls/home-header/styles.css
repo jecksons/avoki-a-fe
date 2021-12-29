@@ -1,4 +1,4 @@
-header.pos-header{
+header.home-nav{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -7,7 +7,7 @@ header.pos-header{
     align-items: center;
 }
 
-header.pos-header a{
+a.app-home-title{
     font-weight: bold;
     font-size: 1.5rem;
     display: flex;
@@ -16,8 +16,9 @@ header.pos-header a{
     color: var(--onsurface-text);
 }
 
-div#pos-name{
+div#pos-name, a.pos-name{
     background-color: var(--primary-color);
+    text-decoration: none;
     color: var(--primary-color-text);
     padding: 0.5rem;
     border-radius: 6px;
@@ -25,4 +26,68 @@ div#pos-name{
     min-width: 7rem;
     display: flex;
     justify-content: center;
+    min-height: 1rem;
+}
+
+div.home-drop-down{
+    position: relative;
+    display: inline-block;
+}
+
+
+div.home-drop-down{
+    position: relative;
+    display: inline-block;
+}
+
+div.home-drop-down button{
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;  
+    min-width: 8rem;
+    border: 1px solid var(--primary-color);
+}
+
+div.home-drop-down-content{
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--surface-color);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 6px;
+    padding: 0.25rem;
+}
+
+div.home-drop-down-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.75rem;
+  }
+
+div.parent-nav{
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+}
+
+
+div.home-drop-down-content a:hover {
+    background-color: var(--onsurface-item);    
+    color: var(--onsurface-title);
+}
+
+div.home-drop-down-expanded div.home-drop-down-content {
+    display: block;
+}
+
+div.home-drop-down button:hover {
+    color: var(--primary-color-text-hover);  
+    background-color: var(--primary-color-3);    
 }

@@ -1,5 +1,4 @@
 import './styles.css';
-import HomeHeader from './controls/home-header';
 import React, {useState, useEffect}  from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../../../services/api';
@@ -15,6 +14,7 @@ import PaymentDialog from './controls/payment-dialog';
 import SaleFeedback from './controls/sale-feedback';
 import { ProcessStatus, StatusShow } from '../../controls/process-status';
 import {MdOutlinePayments} from 'react-icons/md';
+import HeaderNav from '../../controls/header-nav';
 
 
 const DLG_CANCEL_SALE = 'DLG_CANCEL_SALE';
@@ -60,19 +60,16 @@ export default function PointOfSale (props) {
                     id: ret.data.id,
                     description: ret.data.description,
                     id_business: ret.data.id_business,
+                    unique_code: ret.data.unique_code,
                     cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0
                 });
                 setCartItems(ret.data.currentCart ? ret.data.currentCart.items.reverse() : []);
             }            
         })
         .catch((err) => {
-            if (err.response) {
-                if (err.response.status === 404) {                    
-                    history.push(`/notfound/?requestedURL=${props.location.pathname}`);
-                }
-            }
+            utils.redirectToErrorPage(history, err, props.location);
         });
-    }, [props.match.params.id, props.location.pathname, history]);
+    }, [props.match.params.id, props.location, history]);
 
     const addItem = (item) => {
         setProcessItems([...processItems, item]);
@@ -154,12 +151,7 @@ export default function PointOfSale (props) {
             id: posInfo.id
         })
         .then((ret) => {
-            setPosInfo({
-                id: ret.data.id,
-                description: ret.data.description,
-                id_business: ret.data.id_business,
-                cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0
-            });
+            setPosInfo({...posInfo, cart_value: ret.data.currentCart ? ret.data.currentCart.total_value : 0});
             setCartItems(ret.data.currentCart ? ret.data.currentCart.items.reverse() : []);
             setKeyCart(keyCart + 1);
             onCloseCancelCancellment();
@@ -201,7 +193,7 @@ export default function PointOfSale (props) {
 
     return (
         <div>
-            <HomeHeader  posInfo={{description: (posInfo ? posInfo.description : '')} }  />            
+            <HeaderNav />
             <div className="home-body">
                 <div className="top-view">
                     <div>

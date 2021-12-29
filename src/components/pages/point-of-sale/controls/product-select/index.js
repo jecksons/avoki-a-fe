@@ -7,7 +7,6 @@ export default function ProductSelect(props) {
 
     const categoryId = props.categoryId;
     const [products, setProducts] = useState([]);
-    const [productMetadata, setProductMetadata] = useState(null);
     const [loadingProducts, setLoadingProducts] = useState([]);
     const [qtyAdd, setQtyAdd] = useState('1');
 
@@ -28,7 +27,6 @@ export default function ProductSelect(props) {
             api.get(`/products/?business=1&category=${categoryId}`)
             .then((ret) => {
                 if (ret.status === 200) {
-                    setProductMetadata(ret.data.metadata);
                     setProducts(ret.data.results);
                     setLoadingProducts(false);
                 } else {

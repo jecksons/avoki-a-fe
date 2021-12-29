@@ -20,8 +20,13 @@ button.action-button-disabled{
     cursor: default;
 }
 
+button.action-button:focus{
+    outline: 2px solid #a0a0a0;
+}
+
 button.link-button{
     margin-left: 0.5rem;
+    border-radius: 6px;
     color: var(--primary-color);
     background-color: transparent;
     border: 0;    
@@ -32,6 +37,10 @@ button.link-button{
 
 button.link-button:hover{
     color: var(--primary-color-4);
+}
+
+button.link-button:focus{
+    outline: 2px solid #a0a0a0;
 }
 
 button.secondary-action{
@@ -48,6 +57,64 @@ button.secondary-action{
 button.secondary-action:hover{
     background-color: #e4e4e4;    
 }
+
+
+
+button.alternative-surface,
+button.alternative-surface-disabled{
+    background-color: var(--surface-color);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);    
+    outline: none;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;   
+    cursor: pointer;
+    box-shadow: 2px 2px 2px 2px #f0f0f0;
+}
+
+button.alternative-surface:hover{
+    background-color: var(--surface-hover);    
+    box-shadow: 2px 2px 2px 2px #ebebeb;
+}
+
+button.alternative-surface-disabled{
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: default;
+}
+button.alternative-surface:focus{
+    outline: 2px solid #a0a0a0;
+}
+
+button.alternative-back,
+button.alternative-back-disabled{
+    background-color: var(--background-colorr);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);    
+    outline: none;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;   
+    cursor: pointer;
+    box-shadow: 2px 2px 2px 2px #f0f0f0;
+}
+
+button.alternative-back:hover{
+    background-color: var(--background-color-hover);    
+    color: #000;
+    box-shadow: 2px 2px 2px 2px #ebebeb;
+}
+
+button.alternative-back-disabled{
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: default;
+}
+button.alternative-back:focus{
+    outline: 2px solid #a0a0a0;
+}
+
+
+
 
 button.on-primary,
 button.on-primary-disabled{
@@ -73,6 +140,19 @@ button.on-primary-disabled{
     color: var(--primary-color-text);
     cursor: default;
     box-shadow: none;
+}
+
+button.icon-button{
+    background-color: transparent;
+    color: var(--onsurface-text-2);
+    padding: 0;
+    border: 0;
+    display: flex;
+    cursor: pointer;
+}
+
+button.icon-button:hover{
+    color: var(--onsurface-text);    
 }
 
 div.error-on-primary{
@@ -112,4 +192,26 @@ li.react-tabs__tab--selected{
 ul.react-tabs__tab-list{
     display: flex;
     flex-direction: row;
+}
+
+div.av-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input.noborder-surface{
+    outline: none;
+    border: 0;
+    font-size: 1rem;    
+    padding: 0.5rem;
+    color: var(--onsurface-text);    
+    border: 1px solid var(--surface-color);
+    background-color: var(--surface-color);
+}
+
+input.noborder-surface:focus,
+input.noborder-surface:hover{
+    border: 1px solid var(--onsurface-detail);
 }

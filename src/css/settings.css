@@ -25,12 +25,15 @@
     --onsurface-detail: #F1F1F1;    
     --onsurface-item: #FAFAFA;
     --onsurface-title: #707070;
+    --onsurface-text-2: #505050;
     --onsurface-text: #000;
     --surface-hover-color: #FAFAFA;    
+    --onsurface-hover: #505050;
     --onsurface-item-border: #B9B9B9;
     --onprimary-error: #FF0000;   
     --success-feedback: #00FD38;
     --onsuccess-feedback: #000;
+    --header-height: 2.5rem;
 }
 
 
@@ -139,5 +142,9 @@ table {
 
 
 button{
+    font-family: 'nunitoregular';
+}
+
+input{
     font-family: 'nunitoregular';
 }

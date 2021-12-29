@@ -148,7 +148,7 @@ button.hambg-menu:hover{
       top: 0;
       left: 0;
       right: 0;
-      background-color: #ffffff70;
+      background-color: var(--surface-color);
       box-shadow: 0 0 2px 2px #ebebeb;      
       justify-content: space-between;
       align-content: center;

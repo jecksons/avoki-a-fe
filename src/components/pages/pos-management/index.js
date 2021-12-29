@@ -25,6 +25,9 @@ function LeftSideMenu(props) {
 
    const handleSelMenuItem = (idItem) => {      
       history.push({pathname: props.location.pathname, search: `?menuOption=${idItem}`});
+      if (props.onSelectOption) {
+         props.onSelectOption();
+      }
    }
 
    return (
@@ -58,7 +61,7 @@ function POSManagementTopMenu(props) {
    if (!props.onChangeShow) {
       throw new Error('No onChangeShow is informed!');
    }
-
+   
    return (
       <header className='top-mgment'>
          <button onClick={() => {
@@ -79,6 +82,11 @@ function LeftSideMenuHidden(props) {
             location={props.location}
             hideAppTitle={true}
             selMenuOption={props.selMenuOption}         
+            onSelectOption={() => {
+               if (props.onChangeShow) {
+                  props.onChangeShow();
+               }
+            }}
          />
          
       </div>
@@ -94,7 +102,6 @@ export default function POSManagement(props) {
    const [showMenu, setShowMenu] = useState(false) ;
 
    useEffect(() => {
-      console.log('loading');
       setLoadingPosInfo(true);
       api.get(`point_sale/${props.match.params.id}/?only_pos_info=Y`)
       .then((ret) => {
@@ -108,16 +115,9 @@ export default function POSManagement(props) {
          setLoadingPosInfo(false);
       })
       .catch((err) => {
-         if (err.response) {
-            if (err.response.status === 404)  {
-               history.push(`/notfound/?requestedURL=${props.location.pathname}`);
-               return;
-            }
-         }
-         console.log(utils.getHTTPError(err));         
-         setLoadingPosInfo(false);
+         utils.redirectToErrorPage(history, err, props.location);
       });
-   }, [props.match.params.id, props.location.pathname, history]);
+   }, [props.match.params.id, props.location, history]);
 
    useEffect(() => {
       if (props.location.search !== '') {
@@ -132,7 +132,6 @@ export default function POSManagement(props) {
    }, [props.location.search]);
 
    const onChangeShowMenu = () => {
-      console.log(`set show ${showMenu}`);
       setShowMenu(!showMenu);
    }
 
