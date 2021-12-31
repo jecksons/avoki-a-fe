@@ -201,6 +201,38 @@ div.av-row{
     align-items: center;
 }
 
+div.av-row-reverse{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;    
+}
+
+div.av-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+div.av-column-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+div.width-100{
+    width: 100%;
+}
+
+div.av-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
 input.noborder-surface{
     outline: none;
     border: 0;
@@ -214,4 +246,66 @@ input.noborder-surface{
 input.noborder-surface:focus,
 input.noborder-surface:hover{
     border: 1px solid var(--onsurface-detail);
+}
+
+input.form-surface{
+    outline: none;
+    border: 0;
+    font-size: 1rem;    
+    padding: 0.5rem;
+    color: var(--onsurface-text);    
+    border: 1px solid var(--onsurface-detail);
+    background-color: var(--surface-color);
+}
+
+input.form-surface:focus,
+input.form-surface:hover{
+    border: 1px solid var(--onsurface-title);
+}
+
+label.chk-box{
+    font-size: 1rem;    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+label.chk-box input{
+    width: 16px;
+    height: 16px;
+    margin: 0 0.5rem 0.25rem 0;
+}
+
+label.header-section{
+    font-size: 1rem;
+    color: var(--onsurface-text);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+div.av-select__control--is-focused{
+    box-shadow: none;        
+    border-color: var(--onsurface-title);
+}
+
+div.av-select__control{
+    border: 1px solid var(--onsurface-detail);
+    border-radius: 0;    
+}
+
+div.av-select__control:hover,
+div.av-select__control--is-focused:hover{
+    border: 1px solid var(--onsurface-title);
+}
+
+div.av-select__control--is-focused{    
+    border: 1px solid var(--onsurface-title);
+}
+
+div.av-select__option--is-focused{
+    background-color: var(--primary-color-7);
+}
+
+div.av-select__option--is-selected{
+    background-color: var(--primary-color);
 }

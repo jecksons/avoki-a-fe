@@ -11,7 +11,7 @@ header.home-nav{
 
 header.home-nav::after{
    content: "";
-   width: 1.5rem;
+   width: 2rem;
 }
 
 a.app-home-title{
@@ -20,7 +20,10 @@ a.app-home-title{
    display: flex;
    align-items: center;    
    text-decoration: none;
+   flex: 1;
    color: var(--onsurface-text);
+   text-align: center;
+   justify-content: center;
 }
 
 div#pos-name, a.pos-name{

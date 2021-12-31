@@ -9,6 +9,7 @@
     "axios": "^0.24.0",
     "javascript-time-ago": "^2.3.10",
     "qs": "^6.10.2",
+    "rc-slider": "^9.7.5",
     "react": "^17.0.2",
     "react-autocomplete": "^1.8.1",
     "react-content-loader": "^6.0.3",
@@ -22,6 +23,7 @@
     "react-select": "^5.2.0",
     "react-tabs": "^3.2.3",
     "recharts": "^2.1.8",
+    "sweetalert2": "^11.3.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

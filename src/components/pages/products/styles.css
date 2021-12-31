@@ -106,3 +106,69 @@ div.info-products h1{
 div.info-products button{
    min-width: 5rem;
 }
+
+
+div.parent-product-dialog{
+   background-color: var(--surface-color);
+   display: flex;
+   flex-direction: column;
+   row-gap: 1rem;
+   padding: 1rem;
+   border-radius: 6px;
+   width: 18rem;
+   min-height: 10rem;
+}
+
+div.pd-main-content{
+   display: flex;
+   flex-direction: column;
+   row-gap: 0.5rem;
+   flex: 1;
+}
+
+h2.dialog-title{
+   font-size: 0.75rem;
+   color: var(--onsurface-title);
+   text-align: center;
+}
+
+div.pd-main-content label{
+   font-size: 0.9rem;
+   color: var(--onsurface-text);
+   margin-top: 1rem;
+}
+
+div.container-price-range{
+   padding: 0 1.5rem;
+   width: 80%;   
+}
+
+div.loading-copying{
+   display: flex;
+   flex-direction: column;   
+}
+
+
+div.input-min-max{
+ margin-top: 1rem;  
+}
+
+div.input-min-max input{
+   width: 5rem;
+   text-align: center;
+}
+
+div.parent-price-range{
+   row-gap: 0.5rem;
+}
+
+span.rc-slider-dot{
+   border-color: #dAdAdA;
+}
+
+div.rc-slider-handle,
+div.rc-slider-handle-dragging,
+div.rc-slider-handle-click-focused,
+div.rc-slider-handle:hover{
+   border-color: var(--primary-color-4);
+}
