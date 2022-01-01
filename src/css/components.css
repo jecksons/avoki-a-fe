@@ -25,7 +25,6 @@ button.action-button:focus{
 }
 
 button.link-button{
-    margin-left: 0.5rem;
     border-radius: 6px;
     color: var(--primary-color);
     background-color: transparent;
@@ -201,6 +200,21 @@ div.av-row{
     align-items: center;
 }
 
+div.av-row-top{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+div.av-row-gap-05{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 0.5rem;
+}
+
 div.av-row-reverse{
     display: flex;
     flex-direction: row-reverse;
@@ -212,6 +226,13 @@ div.av-column{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+div.av-column-gap-05{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 0.5rem;
 }
 
 div.av-column-center{

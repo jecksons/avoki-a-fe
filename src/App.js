@@ -1,4 +1,5 @@
 import './css/settings.css';
+import './css/objects.css';
 import './css/components.css';
 import React, {useState, useMemo, useCallback} from "react";
 import {BrowserRouter, Switch, Route} from 'react-router-dom';

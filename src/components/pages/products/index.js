@@ -4,7 +4,8 @@ import SurfaceLoading from '../../controls/surface-loading';
 import api from '../../../services/api';
 import utils from '../../../services/utils';
 import {CgCloseO} from 'react-icons/cg';
-import {RiFileCopyLine} from 'react-icons/ri';
+import {RiFileCopyLine, RiDeleteBin5Line} from 'react-icons/ri';
+import {FaUndoAlt} from 'react-icons/fa';
 import './styles.css';
 import HeaderNav from '../../controls/header-nav';
 import Modal from 'react-modal/lib/components/Modal';
@@ -19,6 +20,39 @@ const SS_NONE = 0;
 const SS_SEARCHING = 1;
 const SS_DONE = 2;
 const SS_ERROR = 3;
+
+const DefaultProductSortOrder = {
+   value: 'none',
+   label: 'Sort order'
+};
+
+const ProductSortOrders = [
+   DefaultProductSortOrder,
+   {
+      value: 'description',
+      label: 'Description A - Z'
+   },
+   {
+      value: 'description-desc',
+      label: 'Description Z - A'
+   },
+   {
+      value: 'category',
+      label: 'Category A - Z'
+   },
+   {
+      value: 'category-desc',
+      label: 'Category Z - A'
+   },
+   {
+      value: 'price',
+      label: 'Price 0 - 9'
+   },
+   {
+      value: 'price-desc',
+      label: 'Price 9 - 0'
+   },
+]
 
 
 function CopyProcessing(props) {    
@@ -135,30 +169,46 @@ function CopyProductItem(props) {
 function ProductItem(props) {
    const [copyingProduct, setCopyingProduct] = useState(false);
    const [isDeleting, setIsDeleting] = useState(false);
+
+   const showToastError = useCallback((msg) => {
+      const Toast = Swal.mixin({
+         toast: true,
+         position: 'bottom-end',
+         showConfirmButton: false,         
+         iconColor: '#ffffff',
+         timer: 7000,
+         color: '#ffffff',
+         background: '#D46A6A',
+         text: msg,
+         timerProgressBar: true,
+         didOpen: (toast) => {
+           toast.addEventListener('mouseenter', Swal.stopTimer)
+           toast.addEventListener('mouseleave', Swal.resumeTimer)
+         }
+       })          
+       Toast.fire({
+         icon: 'error',
+         title: `Error on trying to delete!`,
+       });    
+   }, []);
+
+   const handleUndoDelete = () => {
+      setIsDeleting(true);
+      api.post('/products/', {
+         id: props.product.id,
+         available: true
+      }).then(() => {
+         props.onRefreshItem({...props.product, available: true});
+         setIsDeleting(false);
+      }).catch((err) => {
+         showToastError(utils.getHTTPError(err));
+         setIsDeleting(false);
+      });
+   }
    
    const handleDelete = () => {
 
-      const showToastError = (msg) => {
-         const Toast = Swal.mixin({
-            toast: true,
-            position: 'bottom-end',
-            showConfirmButton: false,         
-            iconColor: '#ffffff',
-            timer: 7000,
-            color: '#ffffff',
-            background: '#D46A6A',
-            text: msg,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-          })          
-          Toast.fire({
-            icon: 'error',
-            title: `Error on trying to delete!`,
-          });    
-      }
+
 
       const onUndoDel = () => {
          api.post('/products/', {
@@ -204,45 +254,79 @@ function ProductItem(props) {
       })
    }
 
+   const renderItemNorm = () => {
+      return (
+         <div className='pd-item-content-norm'>
+            <div className='detail-product-item header-product-item'>
+               <div className='av-row-gap-05'>               
+                  <h3 className={`product-item-title${!props.product.available ? '-deleted' : ''}`}>{props.product.description}</h3>
+                  {!props.product.available ? <RiDeleteBin5Line size={12} /> : null }
+               </div>            
+               <p>{`$${props.product.price.toFixed(2)}`}</p>
+            </div>
+            <div className='detail-product-item'>
+               {
+                  props.product.available ? 
+                  (
+                     isDeleting ? 
+                     <DeleteProcessing /> : 
+                     <button className='icon-button' onClick={handleDelete} ><CgCloseO size={16} /></button>            
+                  ) : 
+                  (
+                     isDeleting ? 
+                     <DeleteProcessing /> : 
+                     <button className='icon-button' onClick={handleUndoDelete} ><FaUndoAlt size={16} /></button>            
+                  )
+               }      
+               <p>{`${props.product.category.description}`}</p>
+               <button className='icon-button' onClick={() => setCopyingProduct(true)}><RiFileCopyLine size={16} /></button>
+            </div>
+         </div>
+      );
+   }
+
+   const renderItemFullSize = () => {
+      return (
+         <div className='pd-item-content-full'>
+            <div className='av-row-gap-05'>               
+               <h3 className={`product-item-title${!props.product.available ? '-deleted' : ''}`}>{props.product.description}</h3>
+               {!props.product.available ? <RiDeleteBin5Line size={12} /> : null }
+            </div>            
+            <div className='pd-item-det-full'>
+               <p className='txt-right'>{`$${props.product.price.toFixed(2)}`}</p>               
+               <p>{`${props.product.category.description}`}</p>
+               <div className='av-row-gap-05'>
+                  {
+                     props.product.available ? 
+                     (
+                        isDeleting ? 
+                        <DeleteProcessing /> : 
+                        <button className='icon-button' onClick={handleDelete} ><CgCloseO size={16} /></button>            
+                     ) : 
+                     (
+                        isDeleting ? 
+                        <DeleteProcessing /> : 
+                        <button className='icon-button' onClick={handleUndoDelete} ><FaUndoAlt size={16} /></button>            
+                     )
+                  }      
+                  <button className='icon-button' onClick={() => setCopyingProduct(true)}><RiFileCopyLine size={16} /></button>
+               </div>
+            </div>
+         </div>
+      );
+   }
+
    return (
       <li key={props.product.id} className='product-item'>
-         <div className='detail-product-item header-product-item'>
-            <h3>{props.product.description}</h3>
-            <p>{`$${props.product.price.toFixed(2)}`}</p>
-         </div>
-         <div className='detail-product-item'>
-            {
-               isDeleting ? 
-                  <DeleteProcessing /> : 
-                  <button className='icon-button' onClick={handleDelete} ><CgCloseO size={16} /></button>            
-            }            
-            <p>{`${props.product.category.description}`}</p>
-            <button className='icon-button' onClick={() => setCopyingProduct(true)}><RiFileCopyLine size={16} /></button>
-         </div>
+         {renderItemNorm()}
+         {renderItemFullSize()}
+         
          <CopyProductItem  show={copyingProduct}  onCloseModal={() => setCopyingProduct(false)}  product={props.product} />
       </li>
    );
 }
 
-function searchResultsReducer(state, action) {
-   switch (action.type) {
-      case 'append':  {
-         return [...state, ...action.values];
-      }
-      case 'set': 
-         return action.values;
-      case 'add': {
-         let items = [...state];
-         items.splice(action.itemIndex, 0, action.item);
-         return items;
-      }
-      case 'del': {
-         return state.filter((itm) => itm !== action.item);
-      }
-      default: 
-         throw new Error('Action not expected');
-   }
-}
+
 
 function reducerMinMaxPrice(state, action) {
    switch (action.type) {
@@ -451,7 +535,36 @@ function ProductSearchFilters({onCloseModal, show, id_business, prevFilters = nu
    } else {
       return null;
    }
+}
 
+function searchResultsReducer(state, action) {
+   switch (action.type) {
+      case 'append':  {
+         return [...state, ...action.values];
+      }
+      case 'set': 
+         return action.values;
+      case 'add': {
+         let items = [...state];
+         items.splice(action.itemIndex, 0, action.item);
+         return items;
+      }
+      case 'del': {
+         return state.filter((itm) => itm !== action.item);
+      }
+      case 'replace': {
+         let items = [...state];
+         const idxItem = items.findIndex((itm) => itm.id === action.item.id);
+         if (idxItem >= 0) {
+            items[idxItem] = action.item;
+         } else {
+            console.log(`item not found with id ${action.item.id}`);
+         }
+         return items;
+      }
+      default: 
+         throw new Error('Action not expected');
+   }
 }
 
 export default function Products(props) {
@@ -466,35 +579,60 @@ export default function Products(props) {
    const [showingFilters, setShowingFilters] = useState(false);
    const refSearch = useRef(null);
    const [searchFilters, setSearchFilters] = useState(null);   
-      
-   const handleSearch = useCallback((mustUseOffset, directFilters) => {
-      const offset = (mustUseOffset && searchMetadata && ((searchMetadata.offset + searchMetadata.limit) > 0)) ? (searchMetadata.offset + searchMetadata.limit) : 0;
+   const [sortOrder, setSortOrder] = useState(DefaultProductSortOrder);
+         
+   const handleSearch = useCallback((mustUseOffset, directFilters, directSortOrder) => {
+      const offset = (mustUseOffset && searchMetadata && ((searchMetadata.offset + searchMetadata.limit) > 0)) ? (searchMetadata.offset + searchMetadata.limit) : 0;      
       if (offset > 0) {
          setLoadingMore(true);
          setSearchStatus(prev => prev !== SS_DONE ? SS_SEARCHING : SS_DONE);
       } else {
          setLoadingMore(false);
          setSearchStatus(SS_SEARCHING);
+      }     
+
+      const getFilters = () => {
+         let strGet = '';
+         const filters = directFilters ?? searchFilters; 
+         if (filters) {
+            if (filters.showInactives === true) {
+               strGet += '&showinactives=Y';
+            }
+            if (filters.minPrice >= 0) {
+               strGet += `&minprice=${filters.minPrice.toFixed(2)}`;
+            }
+            if (filters.maxPrice >= 0) {
+               strGet += `&maxprice=${filters.maxPrice.toFixed(2)}`;
+            }
+            if (filters.id_product_category > 0) {
+               strGet += `&id_product_category=${filters.id_product_category}`;
+            }
+         }
+         return strGet;
+      }
+
+      const getSortOrder = () => {
+         let strGet = '';
+         const sortInUse = directSortOrder ?? sortOrder;
+         if (sortInUse) {
+            if (sortInUse.value !== DefaultProductSortOrder.value) {
+               let sortVals = sortInUse.value.split('-');
+               strGet = `&sortby=${sortVals[0]}`;
+               if (sortVals.length > 1) {
+                  strGet += `&sortorder=${sortVals[1]}`;
+               }                             
+            }
+         }
+         return strGet;
       }      
+
+
       const cancelToken = api.getCancelToken();
       const fetchItems = async ()  => {
          try {
             let strGet = `/products/?business=${sessionInfo.id_business}&searchtext=${searchText}&offset=${offset}&limit=5`;
-            const filters = directFilters ?? searchFilters;
-            if (filters) {
-               if (filters.showInactives === true) {
-                  strGet += '&showinactives=Y';
-               }
-               if (filters.minPrice >= 0) {
-                  strGet += `&minprice=${filters.minPrice.toFixed(2)}`;
-               }
-               if (filters.maxPrice >= 0) {
-                  strGet += `&maxprice=${filters.maxPrice.toFixed(2)}`;
-               }
-               if (filters.id_product_category > 0) {
-                  strGet += `&id_product_category=${filters.id_product_category}`;
-               }
-            }
+            strGet += getFilters();
+            strGet += getSortOrder();
             const ret = await api.get(strGet);            
             if (offset > 0) {
                resultsDispatch({type: 'append', values: ret.data.results });
@@ -513,7 +651,7 @@ export default function Products(props) {
       }
       fetchItems();
       return () => cancelToken.cancel();
-   }, [searchMetadata, searchText, sessionInfo.id_business, searchFilters]);
+   }, [searchMetadata, searchText, sessionInfo.id_business, searchFilters, sortOrder]);
 
    useEffect(() => {
       handleSearch(false);
@@ -536,6 +674,15 @@ export default function Products(props) {
       }
    }
 
+   const handleChangeSortOrder = (itm) => {
+      setSortOrder(itm);
+      handleSearch(null, null, itm);
+   }
+
+   const onRefreshProdItem = useCallback((item) => {
+      resultsDispatch({type: 'replace', item: item});
+   }, []);
+
 
    return (
       <div className='parent-products'>
@@ -547,16 +694,22 @@ export default function Products(props) {
                   <button className='alternative-back'>New</button>                  
                </div>
                <div className='search-box'>
-                  <input value={searchText} className='noborder-surface' ref={refSearch} placeholder='Type to search products...' onChange={(e) => setSearchText(e.target.value)} />
-                  <button className='action-button' onClick={() => handleSearch()}>Search</button>
-                  <div className='av-row'>
-                     <button className='link-button search-sub-btn' onClick={() => {
-                        setSearchText('');
-                        setSearchFilters(null);
-                        refSearch.current.focus();
-                     } } >Clear</button>
-                     <button className='link-button search-sub-btn' onClick={() => setShowingFilters(true)}>Filters</button>
-                  </div>
+                  <input value={searchText} 
+                     className='noborder-surface pd-search' 
+                     ref={refSearch} 
+                     placeholder='Type to search products...' 
+                     onChange={(e) => setSearchText(e.target.value)} />
+                  <div className='pd-search-buttons'>
+                     <button className='action-button' onClick={() => handleSearch()}>Search</button>
+                     <div className='av-row-gap-05'>
+                        <button className='link-button search-sub-btn' onClick={() => {
+                           setSearchText('');
+                           setSearchFilters(null);
+                           refSearch.current.focus();
+                        } } >Clear</button>
+                        <button className='link-button search-sub-btn' onClick={() => setShowingFilters(true)}>Filters</button>
+                     </div>
+                  </div>                  
                </div>               
             </section>
             {
@@ -569,36 +722,65 @@ export default function Products(props) {
                   ),
                   2: (
                      <section className='search-results'>
-                        {
-                           searchMetadata ? 
-                              searchMetadata.total > 0  ?
-                                 (
-                                    <>
-                                       <h4>Found {searchMetadata.total} results</h4>
-                                       <ul className='items-results'>
-                                          {searchResults.map((itm, idx) => <ProductItem product={itm} key={itm.id} onRemItem={onRemItem} itemIndex={idx} onUndoRemItem={onUndoRemItem}/> )}
-                                       </ul>
-                                       {
-                                          (searchMetadata.offset + searchMetadata.count) < searchMetadata.total ? 
-                                             (
-                                                loadingMore ? 
-                                                   <div>  
-                                                      <SurfaceLoading size={36} />
-                                                   </div> : 
-                                                   <button className='alternative-surface load-more' onClick={() => handleSearch(true)}>Load more</button>
-                                             )
-                                              :
-                                             null
-                                       }
-                                    </>
-                                 ) : 
-                                 (
-                                    <div className='av-center'>
-                                       <strong>No results found! Try with another filter.</strong>
-                                    </div>
-                                 )                         : 
-                                 null
-                              }
+                        <div className='pd-result-content'>
+                           {
+                              searchMetadata ? 
+                                 searchMetadata.total > 0  ?
+                                    (
+                                       <>
+                                          <div className='av-row-top'>
+                                             <h4 className='sec-info-results'>Found {searchMetadata.total} results</h4>
+                                             <div className='av-column-gap-05 parent-sort-order'>                                             
+                                                <Select 
+                                                   value={sortOrder}
+                                                   onChange={(itm) => handleChangeSortOrder(itm)}            
+                                                   classNamePrefix='av-select'
+                                                   options={ProductSortOrders}
+                                                />
+                                             </div>
+                                          </div>
+                                          <div className='av-column-gap-05'>
+                                             <div  
+                                                className='items-results-header'>
+                                                   <p className='irh-item txt-right'>Price</p>
+                                                   <p className='irh-item'>Category</p>
+                                                   <p className='irh-item-actions'>Actions</p>
+                                             </div>
+                                             <ul className='items-results'>
+                                                {searchResults.map((itm, idx) => <ProductItem 
+                                                   product={itm} 
+                                                   key={itm.id} 
+                                                   onRemItem={onRemItem} 
+                                                   itemIndex={idx} 
+                                                   onUndoRemItem={onUndoRemItem}
+                                                   onRefreshItem={onRefreshProdItem}
+                                                   /> )}
+                                             </ul>
+
+                                          </div>
+                                          {
+                                             (searchMetadata.offset + searchMetadata.count) < searchMetadata.total ? 
+                                                (
+                                                   loadingMore ? 
+                                                      <div>  
+                                                         <SurfaceLoading size={36} />
+                                                      </div> : 
+                                                      <button className='alternative-surface load-more' onClick={() => handleSearch(true)}>Load more</button>
+                                                )
+                                                :
+                                                null
+                                          }
+                                       </>
+                                    ) : 
+                                    (
+                                       <div className='av-center'>
+                                          <strong>No results found! Try with another filter.</strong>
+                                       </div>
+                                    )                         : 
+                                    null
+                                 }
+
+                        </div>                        
                         </section>
                      ),
                   3: (
